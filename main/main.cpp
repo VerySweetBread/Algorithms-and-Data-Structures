@@ -8,7 +8,7 @@
 #include "../lib_easy_example/easy_example.h"
 
 int main() {
-  int a, b; 
+  int a, b;
   float result;
 
   a = 1; b = 4;
