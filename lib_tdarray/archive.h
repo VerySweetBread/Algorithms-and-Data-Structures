@@ -1,3 +1,5 @@
+// Copyright 2024 Gleb Zaharov
+
 #pragma once
 #include <math.h>
 #include <iostream>
@@ -10,14 +12,6 @@
 
 enum State { empty, busy, deleted };
 
-namespace algorithms {
-    template<typename T>
-    inline void swap(T& val_1, T& val_2) noexcept {
-        T tmp = val_1;
-        val_1 = val_2;
-        val_2 = tmp;
-    }
-}
 
 /* TERMINOLOGY
  * index = real index of element
@@ -35,12 +29,13 @@ class TArchive {
     size_t _capacity;          // real array size
     size_t _size;              // amount of added elements (deleted too)
     size_t _deleted;           // amount of deletes elements
-public:
+
+ public:
     TArchive();
-    //TArchive(const TArchive& archive);
+    // TArchive(const TArchive& archive);
     TArchive(const T* arr, size_t n);
-    //TArchive(size_t n, T value);
-    //TArchive(const TArchive& archive, size_t pos, size_t n);
+    // TArchive(size_t n, T value);
+    // TArchive(const TArchive& archive, size_t pos, size_t n);
 
     ~TArchive();
 
@@ -49,42 +44,43 @@ public:
     inline bool empty() const noexcept;
     inline bool full() const noexcept;
 
-    //size_t size();
-    //size_t capacity();
-    //const T* data();
+    // size_t size();
+    // size_t capacity();
+    // const T* data();
     size_t len();
 
     T get(size_t);
 
-    //void swap(TArchive& archive);
+    // void swap(TArchive& archive);
 
-    //TArchive& assign(const TArchive& archive);
+    // TArchive& assign(const TArchive& archive);
 
     void clear();
-    //void resize(size_t n, T value);
+    // void resize(size_t n, T value);
     void resize(size_t size);
     void reserve(size_t n);
 
     void push_back(T value);             // вставка элемента (в конец)
-    T pop_back();                     // удаление элемента (из конца)
+    T pop_back();                        // удаление элемента (из конца)
     void push_front(T value);            // вставка элемента (в начало)
-    T pop_front();                    // удаление элемента (из начала)
+    T pop_front();                       // удаление элемента (из начала)
 
     TArchive& insert(const T* arr, size_t n, size_t pos);
     TArchive& insert(T value, size_t pos);
 
-    //TArchive& replace(size_t pos, T new_value);
+    // TArchive& replace(size_t pos, T new_value);
 
-    //TArchive& erase(size_t pos, size_t n);
+    // TArchive& erase(size_t pos, size_t n);
     void remove_all(T value);
     void remove_first(T value);
     void remove_last(T value);
-    void remove(size_t pos);  // TODO: change this method for pos, not index
+    void remove(size_t pos);  // TODO(sweetbread): change this method for pos
 
     size_t* find_all(T value) const noexcept;
     size_t find_first(T value) const noexcept;
     size_t find_last(T value) const noexcept;
-private:
+
+ private:
     size_t count_value(T value) const noexcept;
     void clear_garbage();
     void set_delete(size_t i);
@@ -115,7 +111,7 @@ TArchive<T>::TArchive(const T* arr, size_t n) {
         _states[i] = State::busy;
     }
     for (i; i < STEP_CAPACITY; i++)
-         _states[i] == State::empty;   
+         _states[i] == State::empty;
 }
 
 template <typename T>
@@ -156,8 +152,7 @@ void TArchive<T>::clear_garbage() {
     for (size_t i = 0; i < _size; i++) {
         if (_states[i] == State::deleted) {
             offset++;
-        }
-        else {
+        } else {
             _data[i-offset] = _data[i];
             _states[i-offset] = State::busy;
         }
@@ -196,9 +191,11 @@ void TArchive<T>::reserve(size_t n) {
 
 template <typename T>
 void TArchive<T>::resize(size_t size) {
-    size_t new_capacity = int(STEP_CAPACITY * ceil((float)size/STEP_CAPACITY));
-    if (new_capacity > MAX_CAPACITY) throw std::logic_error("MAX_CAPACITY reached");
-    
+    size_t new_capacity = static_cast<int>(
+        STEP_CAPACITY * ceil(static_cast<float>(size)/STEP_CAPACITY));
+    if (new_capacity > MAX_CAPACITY)
+        throw std::logic_error("MAX_CAPACITY reached");
+
     T* new_data = new T[new_capacity];
     State* new_states = new State[new_capacity];
     size_t offset = 0;
@@ -210,9 +207,10 @@ void TArchive<T>::resize(size_t size) {
         new_data[i-offset] = _data[i];
         new_states[i-offset] = State::busy;
     }
-    
-    for (size_t i = _capacity; i < new_capacity; i++) new_states[i] = State::empty;
-    
+
+    for (size_t i = _capacity; i < new_capacity; i++)
+        new_states[i] = State::empty;
+
     _size -= offset;
     _deleted -= offset;
     delete [] _data; _data = new_data;
@@ -223,9 +221,8 @@ void TArchive<T>::resize(size_t size) {
 template <typename T>
 TArchive<T>& TArchive<T>::insert(const T* arr, size_t n, size_t pos) {
     if (_size < pos)
-        throw std::logic_error("Error in function \
-            \"TArchive<T>& insert(T value, size_t pos)\": wrong position value.");
-    
+        throw std::logic_error("Wrong position value.");
+
     if (_size + n > _capacity)
         resize(_size+n-_capacity);
 
@@ -240,15 +237,14 @@ TArchive<T>& TArchive<T>::insert(const T* arr, size_t n, size_t pos) {
     }
 
     _size += n;
-    
+
     return *this;
 }
 
 template <typename T>
 TArchive<T>& TArchive<T>::insert(T value, size_t pos) {
     if (_size < pos)
-        throw std::logic_error("Error in function \
-            \"TArchive<T>& insert(T value, size_t pos)\": wrong position value.");
+        throw std::logic_error("Wrong position value.");
 
     if (_deleted) {
         size_t dBefore = 0;  // Deleted cells before the position
@@ -262,7 +258,9 @@ TArchive<T>& TArchive<T>::insert(T value, size_t pos) {
             if (_states[i] == State::deleted) {
                 dBefore++;
                 bEnd = i;
-            } else index++;
+            } else {
+                index++;
+            }
         }
         aStart = i;
         aEnd = i;
@@ -270,7 +268,7 @@ TArchive<T>& TArchive<T>::insert(T value, size_t pos) {
             if (_states[i] == State::deleted) {
                 aEnd = i;
                 break;
-            } 
+            }
         }
 
         size_t offset = 0;
@@ -279,22 +277,22 @@ TArchive<T>& TArchive<T>::insert(T value, size_t pos) {
                 _data[i] = _data[i-1];
                 _states[i] = State::busy;
             }
-            
+
         } else {
             aStart--;
-            
+
             for (i = bEnd; i < aStart; i++) {
                 _data[i] = _data[i+1];
                 _states[i] = State::busy;
             }
-        } 
+        }
         _data[aStart] = value;
         _states[aStart] = State::busy;
         _deleted--;
     } else {
         if (full())
             reserve(1);
-    
+
         for (size_t i = _size; i > pos; i--) {
             _data[i] = _data[i-1];
             _states[i] = State::busy;
@@ -303,16 +301,14 @@ TArchive<T>& TArchive<T>::insert(T value, size_t pos) {
         _states[pos] = State::busy;
         _size += 1;
     }
-    
+
     return *this;
 }
 
 template <typename T>
 void TArchive<T>::remove(size_t pos) {
-    if (_size <= pos) {
-        throw std::logic_error("Error in function \
-            \"TArchive<T>& remove(size_t pos)\": wrong position value.");
-    }
+    if (_size <= pos)
+        throw std::logic_error("Wrong position value.");
     size_t i = 0;
     while (_states[i] == State::deleted) i++;
 
@@ -322,7 +318,7 @@ void TArchive<T>::remove(size_t pos) {
     }
     _states[pos] = State::deleted;
     _deleted++;
-    
+
     if (_deleted > _size*.15)
         reserve(len());
 }
@@ -350,7 +346,7 @@ void TArchive<T>::remove_last(T value) {
 template <typename T>
 void TArchive<T>::remove_all(T value) {
     for (size_t i = 0; i < _size; i++) {
-        if (_data[i] == value and _states[i] == State::busy) {
+        if (_data[i] == value && _states[i] == State::busy) {
             _states[i] = State::deleted;
             _deleted++;
         }
@@ -366,7 +362,7 @@ size_t TArchive<T>::find_first(T value) const noexcept {
     for (size_t i = 0; i < _size; i++) {
         if (_states[i] == State::busy) {
             pos++;
-            if(_data[i] == value) {
+            if (_data[i] == value) {
                 out = pos;
                 break;
             }
@@ -392,7 +388,7 @@ size_t TArchive<T>::find_last(T value) const noexcept {
 }
 
 template <typename T>
-size_t* TArchive<T>::find_all (T value) const noexcept {
+size_t* TArchive<T>::find_all(T value) const noexcept {
     size_t count = this->count_value(value);
     if (count == 0) return nullptr;
     size_t* found_positions = new size_t[count + 1];
@@ -419,14 +415,13 @@ void TArchive<T>::push_back(T value) {
 template <typename T>
 T TArchive<T>::pop_back() {
     if (!(_size-_deleted)) throw std::logic_error("No elements");
-    for (size_t i = _size-1; i>=0; i--) {
+    for (size_t i = _size-1; i >= 0; i--) {
         if (_states[i] == State::busy) {
             _states[i] = State::deleted;
             _deleted++;
             return _data[i];
         }
     }
-    
 }
 
 template <typename T>
@@ -437,7 +432,7 @@ void TArchive<T>::push_front(T value) {
 template <typename T>
 T TArchive<T>::pop_front() {
     if (!(_size-_deleted)) throw std::logic_error("No elements");
-    for (size_t i = 0; i<_size; i++) {
+    for (size_t i = 0; i < _size; i++) {
         if (_states[i] == State::busy) {
             _states[i] = State::deleted;
             _deleted++;
@@ -449,7 +444,6 @@ T TArchive<T>::pop_front() {
 
 template <typename T>
 void TArchive<T>::print() const noexcept {
-    
     for (size_t i = 0; i < _size; i++) {
         if (_states[i] != State::deleted)
             std::cout << _data[i] << ", ";
@@ -459,8 +453,3 @@ void TArchive<T>::print() const noexcept {
 #endif
     }
 }
-
-/*
-// пример реализации с возвратом массива найденных позиций
-
-*/

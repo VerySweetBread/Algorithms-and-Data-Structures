@@ -76,7 +76,7 @@ TEST(TestTDArray, overoverflow) {
   TArchive<int> archive;
   for (int i = 0; i < MAX_CAPACITY; i++)
     archive.push_back(i);
-  EXPECT_THROW(archive.push_back(1), std::logic_error); 
+  EXPECT_THROW(archive.push_back(1), std::logic_error);
 }
 
 TEST(TestTDArray, clear) {
@@ -98,7 +98,7 @@ TEST(TestTDArray, remove_all) {
   for (int i = 0; i < 30; i++)
     archive.push_back(0);
   archive.push_back(2);
-  
+
   archive.remove_all(0);
   ASSERT_EQ(2, archive.len());
 
