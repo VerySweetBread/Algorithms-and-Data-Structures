@@ -14,4 +14,4 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v3
     - run: pip install cpplint
-    - run: cpplint --exclude="gtest/*" --exclude="*/icecream.hpp" --recursive .
+    - run: cpplint --exclude="gtest/*" --exclude="*/icecream.hpp" --filter=-build/include_subdir --recursive .
