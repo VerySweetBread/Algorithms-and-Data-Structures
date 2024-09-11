@@ -60,10 +60,10 @@ class TArchive {
     void resize(size_t size);
     void reserve(size_t n);
 
-    void push_back(T value);             // вставка элемента (в конец)
-    T pop_back();                        // удаление элемента (из конца)
-    void push_front(T value);            // вставка элемента (в начало)
-    T pop_front();                       // удаление элемента (из начала)
+    void push_back(T value);             // РІСЃС‚Р°РІРєР° СЌР»РµРјРµРЅС‚Р° (РІ РєРѕРЅРµС†)
+    T pop_back();                        // СѓРґР°Р»РµРЅРёРµ СЌР»РµРјРµРЅС‚Р° (РёР· РєРѕРЅС†Р°)
+    void push_front(T value);            // РІСЃС‚Р°РІРєР° СЌР»РµРјРµРЅС‚Р° (РІ РЅР°С‡Р°Р»Рѕ)
+    T pop_front();                       // СѓРґР°Р»РµРЅРёРµ СЌР»РµРјРµРЅС‚Р° (РёР· РЅР°С‡Р°Р»Р°)
 
     TArchive& insert(const T* arr, size_t n, size_t pos);
     TArchive& insert(T value, size_t pos);
