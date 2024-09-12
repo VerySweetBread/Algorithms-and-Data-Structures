@@ -78,8 +78,9 @@ class TArchive {
     size_t find_first(T value) const noexcept;
     size_t find_last(T value) const noexcept;
 
- private:
     size_t count_value(T value) const noexcept;
+
+ private:
     void _resize(size_t);
     void _reserve(size_t);
 };

@@ -63,6 +63,12 @@ TEST(TestTDArray, insert) {
     ASSERT_EQ(i, archive.get(i));
 }
 
+TEST(TestTDArray, count_value) {
+  int array[10] = {1, 2, 3, 1, 2, 0, 2, 5, 7, 2};
+  TArchive<int> archive(array, 10);
+  ASSERT_EQ(4, archive.count_value(2));
+}
+
 TEST(TestTDArray, overflow) {
   TArchive<int> archive;
   for (int i = 0; i < 30; i++)
