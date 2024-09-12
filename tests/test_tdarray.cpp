@@ -1,7 +1,7 @@
 // Copyright 2024 Gleb Zaharov
 
 #include <gtest.h>
-#include "../lib_tdarray/archive.h"
+#include "../lib_tdarray/tdarray.h"
 
 TEST(TestTDArray, push_back) {
   TArchive<int> archive;

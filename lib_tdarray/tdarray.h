@@ -7,7 +7,7 @@
 #define MAX_CAPACITY 15*100
 
 #ifdef DEBUG
-#include <icecream.hpp>
+#include "icecream.hpp"
 #endif
 
 enum State { empty, busy, deleted };
@@ -57,8 +57,6 @@ class TArchive {
 
     void clear();
     // void resize(size_t n, T value);
-    void resize(size_t size);
-    void reserve(size_t n);
 
     void push_back(T value);             // вставка элемента (в конец)
     T pop_back();                        // удаление элемента (из конца)
@@ -82,8 +80,8 @@ class TArchive {
 
  private:
     size_t count_value(T value) const noexcept;
-    void clear_garbage();
-    void set_delete(size_t i);
+    void _resize(size_t);
+    void _reserve(size_t);
 };
 
 template <typename T>
@@ -120,20 +118,14 @@ size_t TArchive<T>::len() {
 }
 
 template <typename T>
-T TArchive<T>::get(size_t index) {
+T TArchive<T>::get(size_t pos) {
     size_t i = 0;
-    for (; i < index; i++) {
-        if (_states[i] == State::deleted) i++;
+    while (_states[i] == State::deleted) i++;
+    for (size_t j = 0; j < pos; j++) {
+        i++;
+        while (_states[i] == State::deleted) i++;
     }
     return _data[i];
-}
-
-template <typename T>
-void TArchive<T>::set_delete(size_t index) {
-    if (_states[index] == State::deleted) {
-        _states[index] = State::deleted;
-        _deleted++;
-    }
 }
 
 template <typename T>
@@ -144,21 +136,6 @@ size_t TArchive<T>::count_value(T value) const noexcept {
             out++;
     }
     return out;
-}
-
-template <typename T>
-void TArchive<T>::clear_garbage() {
-    size_t offset = 0;
-    for (size_t i = 0; i < _size; i++) {
-        if (_states[i] == State::deleted) {
-            offset++;
-        } else {
-            _data[i-offset] = _data[i];
-            _states[i-offset] = State::busy;
-        }
-    }
-    _size -= offset;
-    _deleted -= offset;
 }
 
 template <typename  T>
@@ -185,12 +162,12 @@ inline bool TArchive<T>::full() const noexcept {
 }
 
 template <typename T>
-void TArchive<T>::reserve(size_t n) {
-    resize(n+_capacity);
+void TArchive<T>::_reserve(size_t n) {
+    _resize(n+_capacity);
 }
 
 template <typename T>
-void TArchive<T>::resize(size_t size) {
+void TArchive<T>::_resize(size_t size) {
     size_t new_capacity = static_cast<int>(
         STEP_CAPACITY * ceil(static_cast<float>(size)/STEP_CAPACITY));
     if (new_capacity > MAX_CAPACITY)
@@ -224,7 +201,7 @@ TArchive<T>& TArchive<T>::insert(const T* arr, size_t n, size_t pos) {
         throw std::logic_error("Wrong position value.");
 
     if (_size + n > _capacity)
-        resize(_size+n-_capacity);
+        _resize(_size+n-_capacity);
 
     for (int i = _size-1+n; i-n <= pos; i--) {
         _data[i] = _data[i-n];
@@ -291,7 +268,7 @@ TArchive<T>& TArchive<T>::insert(T value, size_t pos) {
         _deleted--;
     } else {
         if (full())
-            reserve(1);
+            _reserve(1);
 
         for (size_t i = _size; i > pos; i--) {
             _data[i] = _data[i-1];
@@ -307,7 +284,7 @@ TArchive<T>& TArchive<T>::insert(T value, size_t pos) {
 
 template <typename T>
 void TArchive<T>::remove(size_t pos) {
-    if (_size <= pos)
+    if (len() <= pos)
         throw std::logic_error("Wrong position value.");
     size_t i = 0;
     while (_states[i] == State::deleted) i++;
@@ -316,19 +293,24 @@ void TArchive<T>::remove(size_t pos) {
         i++;
         while (_states[i] == State::deleted) i++;  // Skip deleted
     }
-    _states[pos] = State::deleted;
+    _states[i] = State::deleted;
     _deleted++;
 
     if (_deleted > _size*.15)
-        reserve(len());
+        _resize(len());
 }
 
 template <typename T>
 void TArchive<T>::remove_first(T value) {
     for (size_t i = 0; i < _size; i++) {
         if (_data[i] == value && _states[i] == State::busy) {
-            set_delete(i);
-            break;
+            _states[i] = State::deleted;
+            _deleted++;
+            
+            if (_deleted > _size*.15)
+                _resize(len());
+
+            return;
         }
     }
 }
@@ -337,7 +319,8 @@ template <typename T>
 void TArchive<T>::remove_last(T value) {
     for (size_t i = _size-1; i >= 0; i--) {
         if (_data[i] == value && _states[i] == State::busy) {
-            remove(i);
+            _states[i] = State::deleted;
+            _deleted++;
             break;
         }
     }
@@ -352,7 +335,7 @@ void TArchive<T>::remove_all(T value) {
         }
     }
     if (_deleted > _size*.15)
-        reserve(len());
+        _resize(len());
 }
 
 template <typename T>
