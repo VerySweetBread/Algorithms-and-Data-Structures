@@ -98,6 +98,50 @@ TEST(TestTDArray, clear) {
   ASSERT_EQ(2, archive.get(0));
 }
 
+TEST(TestTDArray, remove) {
+  TArchive<int> archive;
+  for (int i = 0; i < 30; i++)
+    archive.push_back(i);
+
+  for (int i = 0; i < 5; i++)
+    archive.remove(0);
+
+  ASSERT_EQ(25, archive.len());
+  ASSERT_EQ(5, archive.get(0));
+
+  EXPECT_THROW(archive.remove(30), std::logic_error);
+}
+
+TEST(TestTDArray, remove_first) {
+  TArchive<int> archive;
+  for (int i = 0; i < 30; i++)
+    archive.push_back(i);
+
+  archive.insert(1, 1);
+  archive.remove_first(1);
+  archive.remove_first(2);
+
+  ASSERT_EQ(29, archive.len());
+  ASSERT_EQ(0, archive.get(0));
+  ASSERT_EQ(1, archive.get(1));
+  ASSERT_EQ(3, archive.get(2));
+}
+
+TEST(TestTDArray, remove_last) {
+  TArchive<int> archive;
+  for (int i = 0; i < 30; i++)
+    archive.push_back(i);
+
+  archive.insert(1, 1);
+  archive.remove_last(1);
+  archive.remove_last(2);
+
+  ASSERT_EQ(29, archive.len());
+  ASSERT_EQ(0, archive.get(0));
+  ASSERT_EQ(1, archive.get(1));
+  ASSERT_EQ(3, archive.get(2));
+}
+
 TEST(TestTDArray, remove_all) {
   TArchive<int> archive;
   archive.push_back(1);
