@@ -24,6 +24,7 @@ enum State { empty, busy, deleted };
 
 template <typename T>
 class TArchive {
+ protected:
     T* _data;                  // dynamic array
     State* _states;            // ceil states
     size_t _capacity;          // real array size
