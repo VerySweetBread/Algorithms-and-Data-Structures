@@ -50,6 +50,15 @@ class TArchive {
     size_t len();
 
     T get(size_t);
+    void update(size_t pos, T val) {
+        size_t i = 0;
+        while (_states[i] == State::deleted) i++;
+        for (int p = 0; p < pos; p++) {
+            i++;
+            while (_states[i] == State::deleted) i++;
+        }
+        _data[i] = val;
+    }
 
     // void swap(TArchive& archive);
 
