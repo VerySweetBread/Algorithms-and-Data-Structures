@@ -47,9 +47,9 @@ class TArchive {
     // size_t size();
     // size_t capacity();
     // const T* data();
-    size_t len();
+    size_t len() const;
 
-    T get(size_t);
+    T get(size_t) const;
     void update(size_t pos, T val) {
         size_t i = 0;
         while (_states[i] == State::deleted) i++;
@@ -109,26 +109,26 @@ template <typename T>
 TArchive<T>::TArchive(const T* arr, size_t n) {
     _size = n;
     _deleted = 0;
-    _capacity = STEP_CAPACITY * ceil(n/STEP_CAPACITY);
+    _capacity = STEP_CAPACITY * ceil(static_cast<float>(n)/STEP_CAPACITY);
     _data = new T[_capacity];
     _states = new State[_capacity];
 
     size_t i = 0;
-    for (i; i < n; i++) {
+    for (; i < n; i++) {
         _data[i] = arr[i];
         _states[i] = State::busy;
     }
-    for (i; i < STEP_CAPACITY; i++)
-         _states[i] == State::empty;
+    for (; i < _capacity; i++)
+         _states[i] = State::empty;
 }
 
 template <typename T>
-size_t TArchive<T>::len() {
+size_t TArchive<T>::len() const {
     return _size-_deleted;
 }
 
 template <typename T>
-T TArchive<T>::get(size_t pos) {
+T TArchive<T>::get(size_t pos) const {
     size_t i = 0;
     while (_states[i] == State::deleted) i++;
     for (size_t j = 0; j < pos; j++) {
@@ -148,9 +148,9 @@ size_t TArchive<T>::count_value(T value) const noexcept {
     return out;
 }
 
-template <typename  T>
+template <typename T>
 void TArchive<T>::clear() {
-    for (size_t i; i < _size; i++)
+    for (size_t i = 0; i < _size; i++)
         _states[i] = State::deleted;
     _deleted = _size;
 }
@@ -415,6 +415,7 @@ T TArchive<T>::pop_back() {
             return _data[i];
         }
     }
+    throw std::logic_error("Unachived code");
 }
 
 template <typename T>
