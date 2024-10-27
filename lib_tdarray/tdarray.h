@@ -307,7 +307,7 @@ void TArchive<T>::remove_first(T value) {
         if (_data[i] == value && _states[i] == State::busy) {
             _states[i] = State::deleted;
             _deleted++;
-            
+
             if (_deleted > _size*.15)
                 _resize(len());
 

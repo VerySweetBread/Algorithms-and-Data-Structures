@@ -5,16 +5,16 @@
 
 TEST(TStack, push) {
   TStack<int> stack(10);
-  
+
   for (int i = 0; i < 10; i++)
     stack.push(i);
-  
+
   EXPECT_THROW(stack.push(10), std::logic_error);
 }
 
 TEST(TStack, pop) {
   TStack<int> stack(10);
-  
+
   for (int i = 0; i < 10; i++)
     stack.push(i);
 

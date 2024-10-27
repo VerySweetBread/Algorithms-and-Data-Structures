@@ -1,5 +1,7 @@
 // Copyright 2024 Gleb Zaharov
 
+#pragma once
+
 using size_t = decltype(sizeof(0));
 
 template<typename T>
@@ -7,8 +9,8 @@ class Node {
     T _value;
     Node* _nptr;
 
-  public:
-    Node(T value) {
+ public:
+    explicit Node(T value) {
         _value = value;
         _nptr = nullptr;
     }
@@ -23,7 +25,7 @@ class TList {
     Node<T>* _head;
     Node<T>* _tail;
 
-  public:
+ public:
     TList() {
         _head = nullptr;
         _tail = nullptr;

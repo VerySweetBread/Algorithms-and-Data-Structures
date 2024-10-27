@@ -1,5 +1,6 @@
 // Copyright 2024 Gleb Zaharov
 
+#pragma once
 #include "../lib_tdarray/tdarray.h"
 
 template<typename T>
@@ -8,7 +9,7 @@ class TStack {
     size_t _size;
 
  public:
-    TStack(size_t size);
+    explicit TStack(size_t size);
 
     void push(T item);
     T pop();
