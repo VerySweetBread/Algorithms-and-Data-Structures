@@ -13,6 +13,7 @@ include(cmake/function.cmake)         # подхватываем функции,
 add_subdirectory(lib_tdarray)
 add_subdirectory(lib_tvector)
 add_subdirectory(lib_tstack)
+add_subdirectory(lib_monom)
 add_subdirectory(lib_tlist)
 add_subdirectory(main)                # подключаем дополнительный CMakeLists.txt из подкаталога с именем main
 
