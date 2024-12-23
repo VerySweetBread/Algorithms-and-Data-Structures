@@ -44,20 +44,52 @@ class CMonom {
 
     CMonom operator+ (CMonom const& m) {
         if (*this != m) throw std::logic_error("Monoms are not similar");
-        return CMonom(_coef + m._coef, _p1, _p2, _p3);
+        return CMonom(_coef+m._coef, _p1, _p2, _p3);
     }
     CMonom operator- (CMonom const& m) {
         if (*this != m) throw std::logic_error("Monoms are not similar");
-        return CMonom(_coef - m._coef, _p1, _p2, _p3);
+        return CMonom(_coef-m._coef, _p1, _p2, _p3);
     }
     CMonom operator* (CMonom const& m) {
-        return CMonom(_coef * m._coef, _p1+m._p1, _p2+m._p2, _p3+m._p3);
+        return CMonom(_coef*m._coef, _p1+m._p1, _p2+m._p2, _p3+m._p3);
     }
     CMonom operator/ (CMonom const& m) {
-        return CMonom(_coef / m._coef, _p1-m._p1, _p2-m._p2, _p3-m._p3);
+        return CMonom(_coef/m._coef, _p1-m._p1, _p2-m._p2, _p3-m._p3);
     }
 
     CMonom operator-() const {
         return CMonom(-_coef, _p1, _p2, _p3);
+    }
+
+    CMonom operator*(size_t n) {
+        return CMonom(_coef*n, _p1, _p2, _p3);
+    }
+    CMonom operator/(size_t n) {
+        return CMonom(_coef/n, _p1, _p2, _p3);
+    }
+
+    CMonom operator+= (CMonom const& m) {
+        if (*this != m) throw std::logic_error("Monoms are not similar");
+        _coef += m._coef;
+        return *this;
+    }
+    CMonom operator-= (CMonom const& m) {
+        if (*this != m) throw std::logic_error("Monoms are not similar");
+        _coef -= m._coef;
+        return *this;
+    }
+    CMonom operator*= (CMonom const& m) {
+        _coef *= m._coef;
+        _p1 += m._p1;
+        _p2 += m._p2;
+        _p3 += m._p3;
+        return *this;
+    }
+    CMonom operator/= (CMonom const& m) {
+        _coef /= m._coef;
+        _p1 -= m._p1;
+        _p2 -= m._p2;
+        _p3 -= m._p3;
+        return *this;
     }
 };
