@@ -246,3 +246,8 @@ TEST(CMonom, eq_div) {
   ASSERT_EQ(a.get_p2(), 0);
   ASSERT_EQ(a.get_p3(), 0);
 }
+
+TEST(CMonom, calc) {
+  ASSERT_EQ(CMonom(1, 1, 1, 1).calc(1, 1, 1), 1);
+  ASSERT_EQ(CMonom(2, 1, 2, 3).calc(9, 8, 2), 9216);
+}

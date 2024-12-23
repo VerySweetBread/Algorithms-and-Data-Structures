@@ -7,6 +7,15 @@
 
 typedef typeof(sizeof(0)) size_t;
 
+size_t pow(size_t n, size_t k) {
+    if (k == 0) return 1;
+
+    size_t res = n;
+    for (size_t i = 0; i < k-1; i++)
+        res *= n;
+    return res;
+}
+
 class CMonom {
     size_t _coef;
     size_t _p1, _p2, _p3;
@@ -91,5 +100,9 @@ class CMonom {
         _p2 -= m._p2;
         _p3 -= m._p3;
         return *this;
+    }
+
+    size_t calc(size_t x, size_t y, size_t z) {
+        return _coef * pow(x, _p1) * pow(y, _p2) * pow(z, _p3);
     }
 };
