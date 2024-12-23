@@ -54,7 +54,7 @@ TEST(CMonom, plus_throw) {
   // x + xz = ?
   CMonom a(1, 1, 0, 0);
   CMonom b(1, 1, 0, 1);
-  
+
   EXPECT_THROW(a + b, std::logic_error);
 
   // y^2z + 2xyz = ?
@@ -67,7 +67,7 @@ TEST(CMonom, minus_throw) {
   // x - xz = ?
   CMonom a(1, 1, 0, 0);
   CMonom b(1, 1, 0, 1);
-  
+
   EXPECT_THROW(a - b, std::logic_error);
 
   // y^2z - 2xyz = ?
