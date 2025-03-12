@@ -4,6 +4,7 @@
 
 #include <stdlib.h>
 #include <iostream>
+#include "../lib_tlist/tlist.h"
 
 typedef typeof(sizeof(0)) size_t;
 
@@ -49,6 +50,28 @@ class CMonom {
     }
     bool operator!= (CMonom const& m) {
         return !(*this == m);
+    }
+
+    bool operator> (CMonom const& m) {
+        if (_p1 < m._p1) return false;
+        else if (_p1 > m._p1) return true;
+
+        if (_p2 < m._p2) return false;
+        else if (_p1 > m._p2) return true;
+
+        if (_p3 <= m._p3) return false;
+        return true;
+    }
+
+    bool operator< (CMonom const& m) {
+        if (_p1 > m._p1) return false;
+        else if (_p1 < m._p1) return true;
+
+        if (_p2 > m._p2) return false;
+        else if (_p1 < m._p2) return true;
+
+        if (_p3 >= m._p3) return false;
+        return true;
     }
 
     CMonom operator+ (CMonom const& m) {
@@ -104,5 +127,13 @@ class CMonom {
 
     size_t calc(size_t x, size_t y, size_t z) {
         return _coef * pow(x, _p1) * pow(y, _p2) * pow(z, _p3);
+    }
+};
+
+class CPolinom {
+    TList<CMonom> monoms;
+
+    CPolinom() {
+        monoms = TList<CMonom>();
     }
 };
