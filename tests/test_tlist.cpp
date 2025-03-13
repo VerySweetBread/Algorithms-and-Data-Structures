@@ -10,6 +10,7 @@ TEST(TList, add_front) {
 
   ASSERT_EQ(5, list.get(1));
   ASSERT_EQ(10, list.get(0));
+  ASSERT_EQ(2, list.get_len());
 }
 
 TEST(TList, add_back) {
@@ -19,4 +20,5 @@ TEST(TList, add_back) {
 
   ASSERT_EQ(5, list.get(0));
   ASSERT_EQ(10, list.get(1));
+  ASSERT_EQ(2, list.get_len());
 }
