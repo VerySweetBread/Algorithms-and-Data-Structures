@@ -21,11 +21,15 @@ TEST(DSU, find) {
   EXPECT_THROW(dsu.find(20), std::invalid_argument);
 }
 
-TEST(DSU, join) {
-  DSU dsu;
+TEST(DSU, n_constrictor) {
+  DSU dsu(5);
 
   for (int i = 1; i <= 5; i++)
-    dsu.make_set(i);
+    ASSERT_EQ(i, dsu.find(i));
+}
+
+TEST(DSU, join) {
+  DSU dsu(5);
 
   dsu.join(1, 4);
   dsu.join(5, 2);

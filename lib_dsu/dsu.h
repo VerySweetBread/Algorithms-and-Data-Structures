@@ -22,6 +22,14 @@ class DSU {
     _group = TList<size_t>();
   }
 
+  DSU(size_t n) {
+    _elements = TList<size_t>();
+    _group = TList<size_t>();
+
+    for (size_t i = 1; i <= n; i++)
+      make_set(i);
+  }
+
   void make_set(size_t el) {
     try {
       find(el);
