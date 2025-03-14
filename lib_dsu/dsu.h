@@ -14,6 +14,7 @@ class DSU {
   TList<size_t> _elements;
   TList<size_t> _group;
 
+ public:
   DSU() {
     _elements = TList<size_t>();
     _group = TList<size_t>();
