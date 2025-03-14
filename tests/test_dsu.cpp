@@ -7,7 +7,7 @@ TEST(DSU, make_set) {
   DSU dsu;
   dsu.make_set(1);
 
-  EXPECT_NO_THROW (dsu.make_set(2));
+  EXPECT_NO_THROW(dsu.make_set(2));
   EXPECT_THROW(dsu.make_set(1), std::invalid_argument);
 }
 

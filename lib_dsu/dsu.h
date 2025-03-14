@@ -8,8 +8,8 @@
 #include "../lib_tlist/tlist.h"
 
 typedef typeof(sizeof(0)) size_t;
-#define MIN(a,b) (((a)<(b))?(a):(b))
-#define MAX(a,b) (((a)>(b))?(a):(b))
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 
 class DSU {
@@ -22,7 +22,7 @@ class DSU {
     _group = TList<size_t>();
   }
 
-  DSU(size_t n) {
+  explicit DSU(size_t n) {
     _elements = TList<size_t>();
     _group = TList<size_t>();
 
