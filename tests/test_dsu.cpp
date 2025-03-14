@@ -20,3 +20,20 @@ TEST(DSU, find) {
   ASSERT_EQ(2, dsu.find(2));
   EXPECT_THROW(dsu.find(20), std::invalid_argument);
 }
+
+TEST(DSU, join) {
+  DSU dsu;
+
+  for (int i = 1; i <= 5; i++)
+    dsu.make_set(i);
+
+  dsu.join(1, 4);
+  dsu.join(5, 2);
+  dsu.join(3, 5);
+
+  ASSERT_EQ(1, dsu.find(1));
+  ASSERT_EQ(2, dsu.find(2));
+  ASSERT_EQ(2, dsu.find(3));
+  ASSERT_EQ(1, dsu.find(4));
+  ASSERT_EQ(2, dsu.find(5));
+}

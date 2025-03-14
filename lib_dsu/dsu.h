@@ -8,6 +8,8 @@
 #include "../lib_tlist/tlist.h"
 
 typedef typeof(sizeof(0)) size_t;
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#define MAX(a,b) (((a)>(b))?(a):(b))
 
 
 class DSU {
@@ -40,5 +42,15 @@ class DSU {
     throw std::invalid_argument("This element was not found");
   }
 
-  void join(size_t el1, size_t el2);
+  void join(size_t el1, size_t el2) {
+    size_t i = find(el1);
+    size_t j = find(el2);
+
+    size_t from = MAX(i, j);
+    size_t to = MIN(i, j);
+
+    for (size_t i = 0; i < _group.get_len(); i++) {
+      if (_group.get(i) == from) _group.set(i, to);
+    }
+  }
 };

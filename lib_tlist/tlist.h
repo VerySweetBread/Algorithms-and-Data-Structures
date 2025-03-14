@@ -18,6 +18,7 @@ class Node {
     void set_next(Node* node) { _nptr = node; }
     Node* get_next() { return _nptr; }
     T get_val() { return _value; }
+    void set_val(T val) { _value = val; }
 };
 
 template<typename T>
@@ -67,6 +68,13 @@ class TList {
         for (int i = 0; i < pos; i++)
             ptr = ptr->get_next();
         return ptr->get_val();
+    }
+
+    void set(size_t pos, T val) {
+        Node<T>* ptr = _head;
+        for (int i = 0; i < pos; i++)
+            ptr = ptr->get_next();
+        ptr->set_val(val);
     }
 
     size_t get_len() {
